@@ -46,9 +46,9 @@ public abstract class Transaction {
         if (original == null) {
             throw new IllegalArgumentException("Cannot copy a null Transaction object.");
         }
-        this.description = original.description;
+        this.description = original.description.trim();
         this.amount = original.amount;
-        this.category = original.category;
+        this.category = original.category.trim();
     }
 
     // SETTERS
@@ -61,7 +61,7 @@ public abstract class Transaction {
         if (description == null || description.trim().length() == 0) {
             return false;
         }
-        this.description = description;
+        this.description = description.trim();
         return true;
     }
 
@@ -87,7 +87,7 @@ public abstract class Transaction {
         if (category == null || category.trim().length() == 0) {
             return false;
         }
-        this.category = category;
+        this.category = category.trim();
         return true;
     }
 
@@ -137,5 +137,36 @@ public abstract class Transaction {
     */
     public String getCategory() {
         return this.category;
+    }
+
+    // REQUIRED METHODS
+    /**
+	 * String of all instance variables (category, description and amount)
+	 * @return String containing category, description and amount, in this format: Category: [General] "Generic description" + | Amount: 0.00$
+	 */
+    @Override
+    public String toString() {
+        return "Category: [" + this.category + "] " + this.description + " | Amount: $"
+                + String.format("%.2f", this.amount);
+    }
+
+    /**
+	 * Checking for equality of Transaction objects, all instance variables exactly equal
+	 * to each other (ignoring case).
+	 * 
+	 * @param other Transaction object to compare for equality
+	 * 
+	 * @return boolean representing equality between both objects, all data is
+	 *         exactly equal to each other
+	 */
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || this.getClass() != other.getClass()) {
+            return false;
+        }
+        Transaction otherTx = (Transaction) other;
+        return this.description.equalsIgnoreCase(otherTx.description) &&
+                Double.compare(this.amount, otherTx.amount) == 0 &&
+                this.category.equalsIgnoreCase(otherTx.category);
     }
 }
